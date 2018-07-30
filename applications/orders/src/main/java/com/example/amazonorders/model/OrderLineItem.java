@@ -4,10 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter @Setter
@@ -23,6 +20,10 @@ public class OrderLineItem {
   private Double totalPrice;
   private Long shipmentId;
 
+  @ManyToOne
+  @JoinColumn(name = "order_id")
+  private Order order;
+
   public void setTotalPrice(Double price) {}
 
   public Double getTotalPrice() {
@@ -31,5 +32,9 @@ public class OrderLineItem {
     } else {
       return 0.0;
     }
+  }
+
+  public Long getOrder() {
+    return this.order.getId();
   }
 }

@@ -18,7 +18,9 @@ public class Account {
   private String firstName;
   private String lastName;
   private String email;
+
   @OneToMany
+  @JoinColumn(name = "account_id")
   private List<Address> addresses;
 
 }

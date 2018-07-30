@@ -1,6 +1,5 @@
 package com.example.amazonorders.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,15 +21,13 @@ public class Order {
   private Long shippingAddressId;
 
   @OneToMany
+  @JoinColumn(name = "order_id")
   private List<OrderLineItem> lineItems;
   private String orderNumber;
   private Date orderDate;
-
   private Double totalPrice;
 
-  public void setTotalPrice(Double price) {}
 
-  @JsonIgnore
   public Double getTotalPrice() {
     if (this.lineItems != null) {
       this.totalPrice = 0.0;
@@ -38,5 +35,9 @@ public class Order {
     }
 
     return this.totalPrice;
+  }
+
+  public void setTotalPrice() {
+    this.totalPrice = this.getTotalPrice();
   }
 }

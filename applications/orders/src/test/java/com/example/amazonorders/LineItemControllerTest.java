@@ -4,6 +4,7 @@ import com.example.amazonorders.config.SecurityConfiguration;
 import com.example.amazonorders.controller.LineItemController;
 import com.example.amazonorders.model.OrderLineItem;
 import com.example.amazonorders.repository.LineItemRepository;
+import com.example.amazonorders.service.LineItemService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +23,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
@@ -37,7 +39,7 @@ public class LineItemControllerTest {
   private LineItemController controller;
 
   @Mock
-  private LineItemRepository lineItems;
+  private LineItemService lineItems;
 
   @Before
   public void setup() {
@@ -64,8 +66,9 @@ public class LineItemControllerTest {
 
   @Test
   public void testGetOneLineItem() throws Exception {
-    when(lineItems.findById(anyLong())).thenReturn(java.util.Optional.of(new OrderLineItem()));
+    when(lineItems.getOneLineItem(anyLong(), anyLong())).thenReturn(new OrderLineItem());
     mvc.perform(get("/orders/1/lines/1"))
+        .andDo(print())
         .andExpect(status().isOk());
   }
 
@@ -78,7 +81,7 @@ public class LineItemControllerTest {
 
   @Test
   public void testUpdateLineItem() throws Exception {
-    when(lineItems.findById(anyLong())).thenReturn(java.util.Optional.of(new OrderLineItem()));
+    when(lineItems.getOneLineItem(anyLong(), anyLong())).thenReturn(new OrderLineItem());
     mvc.perform(put("/orders/1/lines/1")
     .contentType(MediaType.APPLICATION_JSON).content(lineItemJSON))
         .andExpect(status().isOk());

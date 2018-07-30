@@ -1,7 +1,9 @@
 package com.example.accounts.controller;
 
 import com.example.accounts.config.SecurityConfiguration;
+import com.example.accounts.model.Account;
 import com.example.accounts.model.Address;
+import com.example.accounts.repository.AccountRepository;
 import com.example.accounts.repository.AddressRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,9 +23,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
+@WebMvcTest(AddressController.class)
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {SecurityConfiguration.class})
 public class AddressControllerTest {
@@ -32,6 +35,9 @@ public class AddressControllerTest {
 
   @Mock
   private AddressRepository addresses;
+
+  @Mock
+  private AccountRepository accounts;
 
   @InjectMocks
   private AddressController controller;
@@ -61,6 +67,7 @@ public class AddressControllerTest {
 
   @Test
   public void testCreateAddress() throws Exception {
+    when(accounts.findById(anyLong())).thenReturn(java.util.Optional.of(new Account()));
     mvc.perform(post("/accounts/1/addresses")
     .contentType(MediaType.APPLICATION_JSON).content(addressJSON))
         .andExpect(status().isCreated());
@@ -75,10 +82,12 @@ public class AddressControllerTest {
   @Test
   public void testUpdateAddress() throws Exception {
     when(addresses.save(any())).thenReturn(new Address());
+    when(accounts.findById(anyLong())).thenReturn(java.util.Optional.of(new Account()));
     when(addresses.findById(anyLong())).thenReturn(java.util.Optional.of(new Address()));
 
     mvc.perform(put("/accounts/1/addresses/1")
     .contentType(MediaType.APPLICATION_JSON).content(addressJSON))
+        .andDo(print())
         .andExpect(status().isOk());
   }
 

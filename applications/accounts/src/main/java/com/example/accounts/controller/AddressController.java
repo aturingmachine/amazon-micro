@@ -1,6 +1,7 @@
 package com.example.accounts.controller;
 
 import com.example.accounts.model.Address;
+import com.example.accounts.repository.AccountRepository;
 import com.example.accounts.repository.AddressRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -12,14 +13,17 @@ import java.util.List;
 public class AddressController {
 
   private AddressRepository addressRepository;
+  private AccountRepository accountRepository;
 
-  public AddressController(AddressRepository addressRepository) {
+  public AddressController(AddressRepository addressRepository, AccountRepository accountRepository) {
     this.addressRepository = addressRepository;
+    this.accountRepository = accountRepository;
   }
 
   @PostMapping("")
   @ResponseStatus(HttpStatus.CREATED)
   public Address createAddress(@PathVariable("accountId") Long id, @RequestBody Address address) {
+    address.setAccount(accountRepository.findById(id).get());
     return addressRepository.save(address);
   }
 

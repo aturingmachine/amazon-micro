@@ -33,6 +33,11 @@ public class ProductController {
     return products.findById(id).get();
   }
 
+  @GetMapping("/{id}/price")
+  public Double getProductPrice(@PathVariable("id") Long id) {
+    return products.findById(id).get().getPrice();
+  }
+
   @PutMapping("/{id}")
   public Product updateProduct(@PathVariable("id") Long id, @RequestBody Product product) {
     Product productToUpdate = products.findById(id).get();

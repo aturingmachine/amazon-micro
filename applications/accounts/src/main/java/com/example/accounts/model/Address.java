@@ -22,5 +22,11 @@ public class Address {
   private String country;
 
   @ManyToOne
+  @JoinColumn(name = "account_id")
   private Account account;
+
+
+  public Long getAccount() {
+    return this.account.getId();
+  }
 }

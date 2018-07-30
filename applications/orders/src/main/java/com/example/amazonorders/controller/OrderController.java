@@ -26,7 +26,7 @@ public class OrderController {
 
   @GetMapping("/account/{accountId}")
   public List<Order> getOrdersForAccount(@PathVariable("accountId") Long id) {
-    return orders.findByAccountId(id);
+    return orders.findByAccountIdOrderByOrderDateAsc(id);
   }
 
   @GetMapping("/{id}")

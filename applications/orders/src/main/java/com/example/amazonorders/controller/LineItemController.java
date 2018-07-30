@@ -1,7 +1,7 @@
 package com.example.amazonorders.controller;
 
 import com.example.amazonorders.model.OrderLineItem;
-import com.example.amazonorders.repository.LineItemRepository;
+import com.example.amazonorders.service.LineItemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,42 +11,42 @@ import java.util.List;
 @RequestMapping("/orders/{orderId}/lines")
 public class LineItemController {
 
-  private LineItemRepository lineItems;
+  private LineItemService itemService;
 
-  public LineItemController(LineItemRepository lineItems) {
-    this.lineItems = lineItems;
+  public LineItemController(LineItemService itemService) {
+    this.itemService = itemService;
   }
 
   @PostMapping("")
   @ResponseStatus(HttpStatus.CREATED)
-  public OrderLineItem createLineItem(@RequestBody OrderLineItem item) {
-    return lineItems.save(item);
+  public OrderLineItem createLineItem(@PathVariable("orderId") Long id,
+      @RequestBody OrderLineItem item) {
+
+    return itemService.save(id, item);
   }
 
   @GetMapping("/{id}")
-  public OrderLineItem getOneLineItem(@PathVariable("id") Long id) {
-    return lineItems.findById(id).get();
+  public OrderLineItem getOneLineItem(@PathVariable("orderId") Long orderId,
+      @PathVariable("id") Long id) {
+
+    return itemService.getOneLineItem(orderId, id);
   }
 
   @GetMapping("/shipments/{id}")
   public List<OrderLineItem> getLineItemsByShipment(@PathVariable("id") Long id) {
-    return lineItems.findByShipmentId(id);
+    return itemService.findByShipment(id);
   }
 
   @PutMapping("/{id}")
-  public OrderLineItem updateLineITem(@PathVariable("id") Long id, @RequestBody OrderLineItem item) {
-    OrderLineItem itemToUpdate = lineItems.findById(id).get();
+  public OrderLineItem updateLineItem(@PathVariable("orderId") Long orderId,
+      @PathVariable("id") Long id, @RequestBody OrderLineItem item) {
 
-    itemToUpdate.setProductId(item.getProductId());
-    itemToUpdate.setQuantity(item.getQuantity());
-    itemToUpdate.setShipmentId(item.getShipmentId());
-
-    return lineItems.save(itemToUpdate);
+    return itemService.updateItem(orderId, id, item);
   }
 
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void deleteLineItem(@PathVariable("id") Long id) {
-    lineItems.deleteById(id);
+  public void deleteLineItem(@PathVariable("orderId") Long orderId, @PathVariable("id") Long id) {
+    itemService.deleteItem(orderId, id);
   }
 }

@@ -2,6 +2,10 @@ package com.example.amazonshipments;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestOperations;
+import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 public class AmazonShipmentsApplication {
@@ -9,4 +13,10 @@ public class AmazonShipmentsApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(AmazonShipmentsApplication.class, args);
 	}
+
+	@Bean
+  @LoadBalanced
+  RestOperations restOperations() {
+	  return new RestTemplate();
+  }
 }

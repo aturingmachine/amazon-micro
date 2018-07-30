@@ -3,6 +3,7 @@ package com.example.amazonshipments.controller;
 import com.example.amazonshipments.config.SecurityConfiguration;
 import com.example.amazonshipments.model.Shipment;
 import com.example.amazonshipments.repository.ShipmentRepository;
+import com.example.amazonshipments.service.ShipmentService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +36,7 @@ public class ShipmentControllerTest {
   private ShipmentController controller;
 
   @Mock
-  private ShipmentRepository shipments;
+  private ShipmentService shipments;
 
   @Before
   public void setup() {
@@ -63,7 +64,7 @@ public class ShipmentControllerTest {
 
   @Test
   public void testGetOneShipment() throws Exception {
-    when(shipments.findById(anyLong())).thenReturn(java.util.Optional.of(new Shipment()));
+    when(shipments.findById(anyLong())).thenReturn(new Shipment());
 
     mvc.perform(get("/shipments/1"))
         .andExpect(status().isOk());
@@ -77,7 +78,7 @@ public class ShipmentControllerTest {
 
   @Test
   public void testUpdateShipment() throws Exception {
-    when(shipments.findById(anyLong())).thenReturn(java.util.Optional.of(new Shipment()));
+    when(shipments.findById(anyLong())).thenReturn(new Shipment());
 
     mvc.perform(put("/shipments/1")
     .contentType(MediaType.APPLICATION_JSON).content(shipmentJson))

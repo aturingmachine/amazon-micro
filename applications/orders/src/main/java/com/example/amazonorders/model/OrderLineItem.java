@@ -1,5 +1,7 @@
 package com.example.amazonorders.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,6 +24,7 @@ public class OrderLineItem {
 
   @ManyToOne
   @JoinColumn(name = "order_id")
+  @JsonIgnoreProperties("lineItems")
   private Order order;
 
   public void setTotalPrice(Double price) {}

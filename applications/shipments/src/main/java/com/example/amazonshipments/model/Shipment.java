@@ -1,13 +1,11 @@
 package com.example.amazonshipments.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
@@ -23,5 +21,8 @@ public class Shipment {
   private Long shippingAddressId;
   private Date shippedDate;
   private Date deliveredDate;
+  @JsonInclude
+  @Transient
+  private List<LineItem> lineItems;
 
 }

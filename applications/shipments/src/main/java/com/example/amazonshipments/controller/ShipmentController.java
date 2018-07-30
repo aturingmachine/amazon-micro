@@ -2,6 +2,7 @@ package com.example.amazonshipments.controller;
 
 import com.example.amazonshipments.model.Shipment;
 import com.example.amazonshipments.repository.ShipmentRepository;
+import com.example.amazonshipments.service.ShipmentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,9 +12,9 @@ import java.util.List;
 @RequestMapping("/shipments")
 public class ShipmentController {
 
-  private ShipmentRepository shipments;
+  private ShipmentService shipments;
 
-  public ShipmentController(ShipmentRepository shipments) {
+  public ShipmentController(ShipmentService shipments) {
     this.shipments = shipments;
   }
 
@@ -25,7 +26,7 @@ public class ShipmentController {
 
   @GetMapping("/{id}")
   public Shipment getOneShipment(@PathVariable("id") Long id) {
-    return shipments.findById(id).get();
+    return shipments.findById(id);
   }
 
   @GetMapping("/accounts/{id}")
@@ -35,12 +36,7 @@ public class ShipmentController {
 
   @PutMapping("/{id}")
   public Shipment updateShipment(@PathVariable("id") Long id, @RequestBody Shipment shipment) {
-    Shipment shipmentToUpdate = shipments.findById(id).get();
-    shipmentToUpdate.setDeliveredDate(shipment.getDeliveredDate());
-    shipmentToUpdate.setShippedDate(shipment.getShippedDate());
-    shipmentToUpdate.setShippingAddressId(shipment.getShippingAddressId());
-
-    return shipments.save(shipmentToUpdate);
+    return shipments.updateShipment(id, shipment);
   }
 
   @DeleteMapping("/{id}")

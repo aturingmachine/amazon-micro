@@ -32,6 +32,11 @@ public class AddressController {
     return addressRepository.findByAccountId(id);
   }
 
+  @GetMapping("/{addressId}")
+  public Address getOneAddress(@PathVariable("addressId") Long id) {
+    return addressRepository.findById(id).get();
+  }
+
   @PutMapping("/{addressId}")
   public Address updateAddress(@PathVariable("accountId") Long accountId,
       @PathVariable("addressId") Long addressId, @RequestBody Address address) {

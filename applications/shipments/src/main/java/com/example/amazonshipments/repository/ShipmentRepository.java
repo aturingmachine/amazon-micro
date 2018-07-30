@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface ShipmentRepository extends JpaRepository<Shipment, Long> {
 
-  List<Shipment> findByAccountId(Long id);
+  List<Shipment> findByAccountIdOrderByDeliveredDateAsc(Long id);
 }

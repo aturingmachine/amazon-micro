@@ -1,6 +1,7 @@
 package com.example.amazonorders.controller;
 
 import com.example.amazonorders.model.Order;
+import com.example.amazonorders.model.OrderDetails;
 import com.example.amazonorders.service.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class OrderController {
   }
 
   @GetMapping("/{id}")
-  public Order getOneOrder(@PathVariable("id") Long id) {
+  public OrderDetails getOneOrder(@PathVariable("id") Long id) {
     return orderService.getOne(id);
   }
 

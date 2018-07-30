@@ -2,6 +2,7 @@ package com.example.amazonorders;
 
 import com.example.amazonorders.controller.OrderController;
 import com.example.amazonorders.model.Order;
+import com.example.amazonorders.model.OrderDetails;
 import com.example.amazonorders.repository.OrderRepository;
 import com.example.amazonorders.service.OrderService;
 import org.junit.Before;
@@ -72,7 +73,7 @@ public class OrderControllerTest {
 
   @Test
   public void testGetOneOrder() throws Exception {
-    when(orders.getOne(anyLong())).thenReturn(new Order());
+    when(orders.getOne(anyLong())).thenReturn(new OrderDetails());
 
     mvc.perform(get("/orders/1"))
         .andExpect(status().isOk());
@@ -80,7 +81,6 @@ public class OrderControllerTest {
 
   @Test
   public void testUpdateOrder() throws Exception {
-    when(orders.getOne(anyLong())).thenReturn(new Order());
     when(orders.save(any())).thenReturn(new Order());
 
     mvc.perform(put("/orders/1")

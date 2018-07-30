@@ -38,7 +38,7 @@ public class LineItemServiceTest {
     this.lineItem.setShipmentId((long) 1);
     this.lineItem.setProductId((long) 1);
     this.lineItem.setQuantity(2);
-    this.lineItem.setOrderId((long) 1);
+//    this.lineItem.setOrderId((long) 1);
     this.lineItem.setPrice(10.0);
   }
 

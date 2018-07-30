@@ -1,0 +1,6 @@
+rootProject.name = 'amazon-microservices'
+include "applications/accounts"
+include "applications/orders"
+include "applications/products"
+include "applications/shipments"
+include "applications/gateway"

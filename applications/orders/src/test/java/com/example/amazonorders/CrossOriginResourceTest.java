@@ -9,6 +9,8 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestOperations;
 
 import static org.junit.Assert.assertEquals;
@@ -92,5 +94,13 @@ public class CrossOriginResourceTest {
     Shipment shipment = service.getShipmentFromService(1L);
 
     assertEquals(shipment.getId(), s.getId());
+  }
+
+  @Test
+  public void testCrossResourceCheck() {
+    when(rest.getForEntity(anyString(), eq(String.class)))
+        .thenReturn(new ResponseEntity<String>(HttpStatus.OK));
+    
+    service.checkIfCrossResourceExists("test", 1L);
   }
 }

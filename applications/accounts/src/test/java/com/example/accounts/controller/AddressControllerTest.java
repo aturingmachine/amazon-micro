@@ -42,6 +42,10 @@ public class AddressControllerTest {
   @InjectMocks
   private AddressController controller;
 
+  private Address a = new Address();
+
+  private Account account = new Account();
+
   private String addressJSON;
 
   @Before
@@ -58,6 +62,10 @@ public class AddressControllerTest {
         "\"zip\": \"test\"," +
         "\"country\": \"test\"" +
         " }";
+
+    account.setId(1L);
+    a.setZip("12345");
+    a.setAccount(account);
   }
 
   @Test
@@ -80,10 +88,17 @@ public class AddressControllerTest {
   }
 
   @Test
+  public void testGetOneAddress() throws Exception {
+    when(addresses.findById(anyLong())).thenReturn(java.util.Optional.of(a));
+    mvc.perform(get("/accounts/1/addresses/1"))
+        .andDo(print())
+        .andExpect(status().isOk());
+  }
+
+  @Test
   public void testUpdateAddress() throws Exception {
-    when(addresses.save(any())).thenReturn(new Address());
-    when(accounts.findById(anyLong())).thenReturn(java.util.Optional.of(new Account()));
-    when(addresses.findById(anyLong())).thenReturn(java.util.Optional.of(new Address()));
+    when(addresses.save(any())).thenReturn(a);
+    when(addresses.findById(anyLong())).thenReturn(java.util.Optional.of(a));
 
     mvc.perform(put("/accounts/1/addresses/1")
     .contentType(MediaType.APPLICATION_JSON).content(addressJSON))

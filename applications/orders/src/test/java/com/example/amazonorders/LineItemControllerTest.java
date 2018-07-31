@@ -2,6 +2,7 @@ package com.example.amazonorders;
 
 import com.example.amazonorders.config.SecurityConfiguration;
 import com.example.amazonorders.controller.LineItemController;
+import com.example.amazonorders.model.Order;
 import com.example.amazonorders.model.OrderLineItem;
 import com.example.amazonorders.repository.LineItemRepository;
 import com.example.amazonorders.service.LineItemService;
@@ -35,6 +36,10 @@ public class LineItemControllerTest {
 
   private String lineItemJSON;
 
+  private OrderLineItem item = new OrderLineItem();
+
+  private Order o = new Order();
+
   @InjectMocks
   private LineItemController controller;
 
@@ -50,6 +55,9 @@ public class LineItemControllerTest {
         " \"quantity\": 4," +
         " \"shipmentId\": 1" +
         " }";
+
+    o.setId(1L);
+    item.setOrder(o);
   }
 
   @Test
@@ -66,7 +74,7 @@ public class LineItemControllerTest {
 
   @Test
   public void testGetOneLineItem() throws Exception {
-    when(lineItems.getOneLineItem(anyLong(), anyLong())).thenReturn(new OrderLineItem());
+    when(lineItems.getOneLineItem(anyLong(), anyLong())).thenReturn(item);
     mvc.perform(get("/orders/1/lines/1"))
         .andDo(print())
         .andExpect(status().isOk());

@@ -12,8 +12,10 @@ import java.util.List;
 @NoArgsConstructor
 public class Shipment {
 
+  private Long id;
   private Date shippedDate;
   private Date deliveredDate;
-  @JsonIgnoreProperties(value = {"shipmentId", "order", "id"})
+
+  @JsonIgnoreProperties(value = {"order"})
   private List<OrderLineItem> lineItems;
 }

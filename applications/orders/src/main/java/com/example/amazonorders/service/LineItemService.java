@@ -3,9 +3,7 @@ package com.example.amazonorders.service;
 import com.example.amazonorders.model.OrderLineItem;
 import com.example.amazonorders.repository.LineItemRepository;
 import com.example.amazonorders.repository.OrderRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestOperations;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -17,22 +15,21 @@ public class LineItemService {
 
   private LineItemRepository items;
 
-  private RestOperations rest;
+  private CrossOriginRestService restService;
 
-  public LineItemService(OrderRepository orders, LineItemRepository items, RestOperations rest) {
+  public LineItemService(OrderRepository orders, LineItemRepository items, CrossOriginRestService restService) {
     this.orders = orders;
     this.items = items;
-    this.rest = rest;
+    this.restService = restService;
   }
 
   public OrderLineItem save(Long orderId, OrderLineItem item) {
 
     checkIfOrderExists(orderId);
-    checkIfCrossResourceExists("shipments", item.getShipmentId());
-    checkIfCrossResourceExists("products", item.getProductId());
+    restService.checkIfCrossResourceExists("shipments", item.getShipmentId());
+    restService.checkIfCrossResourceExists("products", item.getProductId());
 
-    Double price = rest.getForObject("//products/products/" + item.getProductId() + "/price",
-        Double.class);
+    Double price = restService.getProductPrice(item.getProductId());
 
     item.setOrder(orders.findById(orderId).get());
     item.setPrice(price);
@@ -59,6 +56,7 @@ public class LineItemService {
     OrderLineItem oldItem = items.findById(id).get();
     oldItem.setQuantity(newItem.getQuantity());
     oldItem.setShipmentId(newItem.getShipmentId());
+    oldItem.setPrice(restService.getProductPrice(oldItem.getProductId()));
 
     return items.save(oldItem);
   }
@@ -73,14 +71,6 @@ public class LineItemService {
   private void checkIfOrderExists(Long orderId) {
     if (!orders.findById(orderId).isPresent()) {
       throw new NoSuchElementException();
-    }
-  }
-
-  private void checkIfCrossResourceExists(String resourceType, Long id) {
-    String url = "//" + resourceType + "/" + resourceType + "/" + id;
-    if (rest.getForEntity(url, String.class).getStatusCode().value() != HttpStatus.OK.value()) {
-      throw new NoSuchElementException(
-          "Resource: " + resourceType + " of ID: " + id + " could not be found");
     }
   }
 }

@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -37,6 +38,8 @@ public class ProductControllerTest {
   @Mock
   private ProductRepository products;
 
+  private Product p;
+
   @Before
   public void setup() {
     MockitoAnnotations.initMocks(this);
@@ -49,6 +52,9 @@ public class ProductControllerTest {
         " \"price\": 100.0," +
         " \"image\": \"test\"" +
         " }";
+
+    this.p = new Product();
+    p.setPrice(10.0);
   }
 
   @Test
@@ -90,5 +96,15 @@ public class ProductControllerTest {
   @Test
   public void testDeleteProduct() throws Exception {
     mvc.perform(delete("/products/1")).andExpect(status().isNoContent());
+  }
+
+  @Test
+  public void testGetPrice() throws Exception {
+    when(products.findById(any())).thenReturn(java.util.Optional.ofNullable(p));
+
+    mvc.perform(get("/products/1/price"))
+        .andExpect(status().isOk())
+        .andDo(result ->
+            assertEquals(result.getResponse().getContentAsString(), p.getPrice().toString()));
   }
 }

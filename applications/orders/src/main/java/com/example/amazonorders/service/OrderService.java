@@ -1,12 +1,10 @@
 package com.example.amazonorders.service;
 
-import com.example.amazonorders.model.Address;
 import com.example.amazonorders.model.Order;
 import com.example.amazonorders.model.OrderDetails;
 import com.example.amazonorders.model.Shipment;
 import com.example.amazonorders.repository.OrderRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestOperations;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,9 +15,9 @@ public class OrderService {
 
   private OrderRepository orders;
 
-  private RestOperations rest;
+  private CrossOriginRestService rest;
 
-  public OrderService(OrderRepository orders, RestOperations rest) {
+  public OrderService(OrderRepository orders, CrossOriginRestService rest) {
     this.orders = orders;
     this.rest = rest;
   }
@@ -28,26 +26,22 @@ public class OrderService {
     return orders.save(order);
   }
 
-  public List<Order> getAllOrdersForAccount(Long accountId) {
-    return orders.findByAccountIdOrderByOrderDateAsc(accountId);
+  public List<OrderDetails> getAllOrdersForAccount(Long accountId) {
+    List<Order> orderList = orders.findByAccountIdOrderByOrderDateAsc(accountId);
+    List<OrderDetails> detailsList = new ArrayList<>();
+
+    orderList.forEach(order -> detailsList.add(getOne(order.getId())));
+
+    return detailsList;
   }
 
   public OrderDetails getOne(Long id) {
-    OrderDetails details = new OrderDetails();
-
     Order o = orders.findById(id).get();
 
-    //Set the data we can get from the base order
-    details.setOrderNumber(o.getOrderNumber());
-    details.setTotalPrice(o.getTotalPrice());
-    details.setLineItems(o.getLineItems());
+    OrderDetails details = new OrderDetails(o);
 
-    //Get the Address
-    Address address = rest.getForObject(
-        "//accounts/accounts/" + o.getAccountId() + "/addresses/" + o.getShippingAddressId(),
-        Address.class);
     //Set the address
-    details.setShippingAddress(address);
+    details.setShippingAddress(rest.getAddressFromService(o));
 
     HashSet<Long> list = new HashSet<>();
 
@@ -56,7 +50,7 @@ public class OrderService {
     ArrayList<Shipment> shipments = new ArrayList<>();
 
     list.forEach(sId -> {
-      Shipment s = rest.getForObject("//shipments/shipments/" + sId, Shipment.class);
+      Shipment s = rest.getShipmentFromService(sId);
       shipments.add(s);
     });
 

@@ -25,7 +25,7 @@ public class OrderController {
   }
 
   @GetMapping("/account/{accountId}")
-  public List<Order> getOrdersForAccount(@PathVariable("accountId") Long id) {
+  public List<OrderDetails> getOrdersForAccount(@PathVariable("accountId") Long id) {
     return orderService.getAllOrdersForAccount(id);
   }
 

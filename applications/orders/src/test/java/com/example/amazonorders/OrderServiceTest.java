@@ -5,6 +5,7 @@ import com.example.amazonorders.model.Order;
 import com.example.amazonorders.model.OrderLineItem;
 import com.example.amazonorders.model.Shipment;
 import com.example.amazonorders.repository.OrderRepository;
+import com.example.amazonorders.service.CrossOriginRestService;
 import com.example.amazonorders.service.OrderService;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +30,9 @@ public class OrderServiceTest {
 
   @Mock
   private RestTemplate rest;
+
+  @Mock
+  private CrossOriginRestService cross;
 
   @InjectMocks
   private OrderService service;
@@ -71,7 +75,7 @@ public class OrderServiceTest {
     when(orderRepository.findById(anyLong())).thenReturn(java.util.Optional.ofNullable(order));
     when(rest.getForObject(anyString(), eq(Address.class))).thenReturn(new Address());
     when(rest.getForObject(anyString(), eq(Shipment.class))).thenReturn(new Shipment());
-
+    when(cross.getAddressFromService(any())).thenReturn(new Address());
     service.getOne((long) 1);
 
     assertEquals(order.getAccountId(), Long.valueOf(1));

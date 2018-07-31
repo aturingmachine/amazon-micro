@@ -1,4 +1,4 @@
-package com.example.amazonorders.model;
+package com.example.amazonshipments.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
@@ -18,3 +18,4 @@ public class Address {
   private String zip;
   private String country;
 }
+

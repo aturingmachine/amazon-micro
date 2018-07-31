@@ -16,5 +16,9 @@ public class OrderDetails {
   private Address shippingAddress;
   private List<Shipment> shipments;
 
-
+  public OrderDetails(Order o) {
+    this.orderNumber = o.getOrderNumber();
+    this.totalPrice = o.getTotalPrice();
+    this.lineItems = o.getLineItems();
+  }
 }

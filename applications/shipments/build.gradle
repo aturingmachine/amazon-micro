@@ -33,6 +33,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('io.pivotal.spring.cloud:spring-cloud-services-starter-service-registry')
+	compile("com.netflix.hystrix:hystrix-javanica:1.5.6")
 	runtime('com.h2database:h2')
 	runtime('javax.xml.bind:jaxb-api')
 	compileOnly('org.projectlombok:lombok')

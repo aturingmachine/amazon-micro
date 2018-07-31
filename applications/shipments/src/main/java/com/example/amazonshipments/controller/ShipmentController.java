@@ -1,7 +1,7 @@
 package com.example.amazonshipments.controller;
 
 import com.example.amazonshipments.model.Shipment;
-import com.example.amazonshipments.repository.ShipmentRepository;
+import com.example.amazonshipments.model.ShipmentPresenter;
 import com.example.amazonshipments.service.ShipmentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -25,12 +25,12 @@ public class ShipmentController {
   }
 
   @GetMapping("/{id}")
-  public Shipment getOneShipment(@PathVariable("id") Long id) {
+  public ShipmentPresenter getOneShipment(@PathVariable("id") Long id) {
     return shipments.findById(id);
   }
 
   @GetMapping("/accounts/{id}")
-  public List<Shipment> getShipmentsForAccount(@PathVariable("id") Long id) {
+  public List<ShipmentPresenter> getShipmentsForAccount(@PathVariable("id") Long id) {
     return shipments.findByAccountId(id);
   }
 

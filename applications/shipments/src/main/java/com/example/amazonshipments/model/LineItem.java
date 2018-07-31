@@ -8,6 +8,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class LineItem {
 
+  private Long id;
   private Long productId;
   private Integer quantity;
   private Double price;

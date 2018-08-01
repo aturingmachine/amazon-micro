@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestOperations;
 
+import java.util.Date;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -34,17 +36,29 @@ public class CrossOriginResourceTest {
 
   private Shipment s;
 
+  private Date now;
+
   @Before
   public void setup() {
     MockitoAnnotations.initMocks(this);
     this.d = 10.0;
     this.a = new Address();
+    now = new Date();
+
     a.setId(1L);
+    a.setBuilding("test");
+    a.setCity("test");
+    a.setCountry("test");
+    a.setState("test");
+    a.setStreet("test");
+    a.setZip("12345");
     this.o = new Order();
     o.setId(1L);
     o.setShippingAddressId(10L);
     this.s = new Shipment();
     s.setId(4L);
+    s.setDeliveredDate(now);
+    s.setShippedDate(now);
   }
 
   @Test
@@ -64,6 +78,12 @@ public class CrossOriginResourceTest {
     Address address = service.getAddressFromService(o);
 
     assertEquals(address.getId(), a.getId());
+    assertEquals(address.getBuilding(), a.getBuilding());
+    assertEquals(address.getCity(), a.getCity());
+    assertEquals(address.getCountry(), a.getCountry());
+    assertEquals(address.getState(), a.getState());
+    assertEquals(address.getStreet(), a.getStreet());
+    assertEquals(address.getZip(), a.getZip());
   }
 
   @Test
@@ -84,6 +104,8 @@ public class CrossOriginResourceTest {
     Shipment shipment = service.getShipmentFromService(1L);
 
     assertEquals(shipment.getId(), s.getId());
+    assertEquals(shipment.getDeliveredDate(), s.getDeliveredDate());
+    assertEquals(shipment.getShippedDate(), s.getShippedDate());
   }
 
   @Test
@@ -100,7 +122,7 @@ public class CrossOriginResourceTest {
   public void testCrossResourceCheck() {
     when(rest.getForEntity(anyString(), eq(String.class)))
         .thenReturn(new ResponseEntity<String>(HttpStatus.OK));
-    
+
     service.checkIfCrossResourceExists("test", 1L);
   }
 }

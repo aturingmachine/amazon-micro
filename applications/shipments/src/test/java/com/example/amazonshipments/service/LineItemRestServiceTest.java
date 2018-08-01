@@ -45,7 +45,11 @@ public class LineItemRestServiceTest {
 
     LineItem[] list = service.getLineItemsForShipment(1L);
 
-    assertEquals(list[0].getProductId(), Long.valueOf(1));
+    assertEquals(list[0].getProductId(), items[0].getProductId());
+    assertEquals(list[0].getShipmentId(), items[0].getShipmentId());
+    assertEquals(list[0].getQuantity(), items[0].getQuantity());
+    assertEquals(list[0].getPrice(), items[0].getPrice());
+    assertEquals(list[0].getTotalPrice(), items[0].getTotalPrice());
   }
 
   @Test

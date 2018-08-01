@@ -76,6 +76,7 @@ public class OrderServiceTest {
     when(rest.getForObject(anyString(), eq(Address.class))).thenReturn(new Address());
     when(rest.getForObject(anyString(), eq(Shipment.class))).thenReturn(new Shipment());
     when(cross.getAddressFromService(any())).thenReturn(new Address());
+
     service.getOne((long) 1);
 
     assertEquals(order.getAccountId(), Long.valueOf(1));

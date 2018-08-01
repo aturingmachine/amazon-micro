@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -48,6 +49,7 @@ public class ShipmentServiceTest {
     this.shipmentList = new ArrayList<>();
     LineItem i = new LineItem();
 
+    i.setId(1L);
     i.setQuantity(1);
     i.setPrice(10.0);
     i.setProductId(1L);
@@ -59,7 +61,7 @@ public class ShipmentServiceTest {
     shipment.setShippedDate(new Date());
     shipment.setDeliveredDate(new Date());
     shipment.setAccountId(1L);
-//    shipment.setLineItems(items);
+    shipment.setLineItems(Arrays.asList(items));
 
     shipmentList.add(shipment);
   }
@@ -71,6 +73,7 @@ public class ShipmentServiceTest {
     Shipment s = service.save(shipment);
 
     assertEquals(shipment.getId(), s.getId());
+    assertEquals(shipment.getLineItems().get(0).getId(), items[0].getId());
   }
 
   @Test

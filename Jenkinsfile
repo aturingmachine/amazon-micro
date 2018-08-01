@@ -5,25 +5,25 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building Application: accounts...'
-                ./gradlew applications/accounts:build
+                sh './gradlew applications/accounts:build'
                 echo 'Building Application: orders...'
-                ./gradlew applications/orders:build
+                sh './gradlew applications/orders:build'
                 echo 'Building Application: products...'
-                ./gradlew applications/products:build
+                sh './gradlew applications/products:build'
                 echo 'Building Application: shipments...'
-                ./gradlew applications/shipments:build
+                sh './gradlew applications/shipments:build'
             }
         }
         stage('Test') {
             steps {
                 echo 'Testing Application: accounts...'
-                ./gradlew applications/accounts:test
+                sh './gradlew applications/accounts:test'
                 echo 'Testing Application: orders...'
-                ./gradlew applications/orders:test
+                sh './gradlew applications/orders:test'
                 echo 'Testing Application: products...'
-                ./gradlew applications/products:test
+                sh './gradlew applications/products:test'
                 echo 'Testing Application: shipments...'
-                ./gradlew applications/shipments:test
+                sh './gradlew applications/shipments:test'
             }
         }
         stage('Deploy') {

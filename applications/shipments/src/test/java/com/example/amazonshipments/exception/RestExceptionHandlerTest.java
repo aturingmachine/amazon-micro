@@ -10,13 +10,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.client.HttpClientErrorException;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.NoSuchElementException;
@@ -77,5 +78,19 @@ public class RestExceptionHandlerTest {
     when(shipments.findById(any())).thenThrow(new EntityNotFoundException());
 
     mvc.perform(get("/shipments/1")).andExpect(status().isNotFound());
+  }
+
+  @Test
+  public void testNotFoundExceptionViaHttpClientErrorException() throws Exception {
+    when(shipments.findById(any())).thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
+
+    mvc.perform(get("/shipments/1")).andExpect(status().isNotFound());
+  }
+
+  @Test
+  public void testFailedDependencyViaIllegalState() throws Exception {
+    when(shipments.findById(any())).thenThrow(new IllegalStateException());
+
+    mvc.perform(get("/shipments/1")).andExpect(status().isFailedDependency());
   }
 }

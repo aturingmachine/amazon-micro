@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -105,5 +106,17 @@ public class LineItemServiceTest {
     OrderLineItem i = service.save(1L, lineItem);
 
     assertEquals(i.getQuantity(), lineItem.getQuantity());
+  }
+
+  @Test
+  public void testFailOnOrderExists() {
+    when(orders.findById(anyLong())).thenReturn(java.util.Optional.empty());
+    when(items.findById(anyLong())).thenReturn(java.util.Optional.ofNullable(lineItem));
+
+    try {
+      service.getOneLineItem(1L, 1L);
+    } catch (NoSuchElementException e) {
+      assertEquals(e.getClass(), NoSuchElementException.class);
+    }
   }
 }

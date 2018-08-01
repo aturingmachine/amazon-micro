@@ -59,6 +59,11 @@ public class AddressServiceTest {
 
     assertEquals(a.getCountry(), address.getCountry());
     assertEquals(a.getId(), Long.valueOf(2));
+    assertEquals(a.getBuilding(), address.getBuilding());
+    assertEquals(a.getCity(), address.getCity());
+    assertEquals(a.getState(), address.getState());
+    assertEquals(a.getStreet(), address.getStreet());
+    assertEquals(a.getZip(), address.getZip());
   }
 
   @Test

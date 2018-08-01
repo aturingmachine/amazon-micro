@@ -1,6 +1,11 @@
 pipeline {
     agent any
-
+    
+    environment {
+      CFAPI = 'https://api.run.pivotal.io'
+      CFUSERNAME = credentials('PCFUSER')
+      CFPASS = credentials('PCFPASS')
+    }
     stages {
         stage('Build') {
             steps {
@@ -28,7 +33,13 @@ pipeline {
         }
         stage('Deploy') {
             steps {
+                echo 'Logging in to CF...'
+                sh 'cf login -a $CFAPI -u $CFUSERNAME -p $CFPASS -o 'solstice-org' -s 'vblom-cnt'
                 echo 'Deploying....'
+                cf push accounts -p applications/accounts/build/libs/applications/accounts-0.0.1-SNAPSHOT.jar
+                cf push orders -p applications/orders/build/libs/applications/orders-0.0.1-SNAPSHOT.jar
+                cf push products -p applications/products/build/libs/applications/products-0.0.1-SNAPSHOT.jar
+                cf push shipments -p applications/shipments/build/libs/applications/shipments-0.0.1-SNAPSHOT.jar
             }
         }
     }

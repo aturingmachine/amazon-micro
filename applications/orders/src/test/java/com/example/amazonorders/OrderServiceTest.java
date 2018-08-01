@@ -1,9 +1,6 @@
 package com.example.amazonorders;
 
-import com.example.amazonorders.model.Address;
-import com.example.amazonorders.model.Order;
-import com.example.amazonorders.model.OrderLineItem;
-import com.example.amazonorders.model.Shipment;
+import com.example.amazonorders.model.*;
 import com.example.amazonorders.repository.OrderRepository;
 import com.example.amazonorders.service.CrossOriginRestService;
 import com.example.amazonorders.service.OrderService;
@@ -39,21 +36,29 @@ public class OrderServiceTest {
 
   private Order order = new Order();
 
+  private OrderDetails details;
+
+  private List<Order> orderList = new ArrayList<>();
+
   private List<OrderLineItem> items = new ArrayList<>();
 
   @Before
   public void setup() {
     MockitoAnnotations.initMocks(this);
 
-    order.setShippingAddressId((long) 1);
-    order.setOrderNumber("12345");
-    order.setAccountId((long) 1);
-    order.setOrderDate(new Date());
+    this.order.setShippingAddressId((long) 1);
+    this.order.setOrderNumber("12345");
+    this.order.setAccountId(1L);
+    this.order.setOrderDate(new Date());
 
     OrderLineItem i = new OrderLineItem();
 
     items.add(i);
-    order.setLineItems(items);
+    this.order.setLineItems(items);
+
+    details = new OrderDetails(order);
+
+    orderList.add(order);
   }
 
   @Test
@@ -73,13 +78,24 @@ public class OrderServiceTest {
   @Test
   public void testGetOneOrder() {
     when(orderRepository.findById(anyLong())).thenReturn(java.util.Optional.ofNullable(order));
-    when(rest.getForObject(anyString(), eq(Address.class))).thenReturn(new Address());
-    when(rest.getForObject(anyString(), eq(Shipment.class))).thenReturn(new Shipment());
     when(cross.getAddressFromService(any())).thenReturn(new Address());
 
     service.getOne((long) 1);
 
     assertEquals(order.getAccountId(), Long.valueOf(1));
+  }
+
+  @Test
+  public void testGetAllOrders() {
+    when(orderRepository.findById(any()))
+        .thenReturn(java.util.Optional.of(order));
+    when(orderRepository.findByAccountIdOrderByOrderDateAsc(anyLong()))
+        .thenReturn(orderList);
+    when(cross.getAddressFromService(any())).thenReturn(new Address());
+
+    List<OrderDetails> list = service.getAllOrdersForAccount(1L);
+
+    assertEquals(list.get(0).getOrderNumber(), order.getOrderNumber());
   }
 
   @Test
@@ -92,6 +108,11 @@ public class OrderServiceTest {
     service.updateOrder((long) 1, order);
 
     assertEquals(order.getAccountId(), Long.valueOf(2));
+  }
+
+  @Test
+  public void testDelete() {
+    service.deleteOrder(order.getId());
   }
 
 }

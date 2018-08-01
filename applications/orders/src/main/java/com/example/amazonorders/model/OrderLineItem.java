@@ -27,8 +27,6 @@ public class OrderLineItem {
   @JsonIgnoreProperties("lineItems")
   private Order order;
 
-  public void setTotalPrice(Double price) {}
-
   public Double getTotalPrice() {
     if (this.price != null && this.quantity != null) {
       return this.price * this.quantity;

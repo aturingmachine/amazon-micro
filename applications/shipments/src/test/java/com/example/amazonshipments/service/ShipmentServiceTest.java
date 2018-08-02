@@ -112,4 +112,9 @@ public class ShipmentServiceTest {
 
     assertEquals(s.getId(), newShip.getId());
   }
+
+  @Test
+  public void testShipmentDelete() {
+    service.deleteById(1L);
+  }
 }

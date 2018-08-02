@@ -51,4 +51,10 @@ public class PriceSetterTest {
     items.get(0).setQuantity(4);
     assertEquals(Double.valueOf(20.0), items.get(0).getTotalPrice());
   }
+
+  @Test
+  public void testSetOrderTotalPrice() {
+    order.setTotalPrice();
+    assertEquals(order.getTotalPrice(), Double.valueOf(35));
+  }
 }

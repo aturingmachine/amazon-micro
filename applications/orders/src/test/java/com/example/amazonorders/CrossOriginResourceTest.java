@@ -2,6 +2,7 @@ package com.example.amazonorders;
 
 import com.example.amazonorders.model.Address;
 import com.example.amazonorders.model.Order;
+import com.example.amazonorders.model.OrderLineItem;
 import com.example.amazonorders.model.Shipment;
 import com.example.amazonorders.service.CrossOriginRestService;
 import org.junit.Before;
@@ -13,7 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestOperations;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -31,6 +34,10 @@ public class CrossOriginResourceTest {
   private Double d;
 
   private Address a;
+
+  private OrderLineItem i = new OrderLineItem();
+
+  private List<OrderLineItem> items = new ArrayList<>();
 
   private Order o;
 
@@ -59,6 +66,12 @@ public class CrossOriginResourceTest {
     s.setId(4L);
     s.setDeliveredDate(now);
     s.setShippedDate(now);
+    s.setLineItems(items);
+    i.setOrder(o);
+    i.setShipmentId(s.getId());
+    i.setProductId(1L);
+    i.setQuantity(2);
+    items.add(i);
   }
 
   @Test
@@ -106,6 +119,7 @@ public class CrossOriginResourceTest {
     assertEquals(shipment.getId(), s.getId());
     assertEquals(shipment.getDeliveredDate(), s.getDeliveredDate());
     assertEquals(shipment.getShippedDate(), s.getShippedDate());
+    assertEquals(shipment.getLineItems().get(0).getQuantity(), i.getQuantity());
   }
 
   @Test
